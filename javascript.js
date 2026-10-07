@@ -27,47 +27,52 @@ Book.prototype.toggleRead = function () {
 };
 
 function addBookToLibrary(title, author, pages, read) {
-  const book = new Book(title, author, pages, read);
-  myLibrary.push(book);
+  const newBook = new Book(title, author, pages, read);
+  myLibrary.push(newBook);
 }
 
 const container = document.querySelector(".card-container");
 
 function addBookToScreen() {
   container.innerHTML = "";
+
   for (let i = 0; i < myLibrary.length; i++) {
     const div = document.createElement("div");
     div.classList.add("card");
-    container.appendChild(div);
     div.innerHTML += `
-        <h1>${myLibrary[i].title}</h1>
-        <p>${myLibrary[i].author}</p>
-        <p>${myLibrary[i].pages} pages</p>
-        <button class="toggle-read" data-id="${myLibrary[i].id}">
-          ${myLibrary[i].readOrNot()}
-        </button>
-        <button class="delete" data-id="${myLibrary[i].id}">x</button>`;
+    <h1>${myLibrary[i].title}</h1>
+    <p>${myLibrary[i].author}</p>
+    <p>${myLibrary[i].pages} pages</p>
+    <button class="toggle-read" data-id="${myLibrary[i].id}">${myLibrary[i].readOrNot()}</button>
+    <button class="delete" data-id="${myLibrary[i].id}">test</button>
+    `;
     container.appendChild(div);
   }
 }
 
-const formModal = document.querySelector("form");
-const title = document.querySelector("#title");
-const author = document.querySelector("#author");
-const pages = document.querySelector("#pages");
+const form = document.querySelector("form");
+const titleForm = document.querySelector("#title");
+const authorForm = document.querySelector("#author");
+const pagesForm = document.querySelector("#pages");
 
-formModal.addEventListener("submit", (event) => {
+form.addEventListener("submit", (event) => {
   event.preventDefault();
   const read = document.querySelector('input[name="read"]:checked');
-  addBookToLibrary(title.value, author.value, pages.value, read.value);
+  addBookToLibrary(
+    titleForm.value,
+    authorForm.value,
+    pagesForm.value,
+    read.value,
+  );
   addBookToScreen();
+  form.reset();
 });
 
 document.addEventListener("DOMContentLoaded", () => {
   addBookToLibrary("The Hobbit", "Tolkien", 310, true);
   addBookToLibrary("Harry Potter", "Rowling", 450, false);
   addBookToScreen();
-  formModal.reset();
+  form.reset();
 });
 
 container.addEventListener("click", (event) => {
@@ -80,8 +85,8 @@ container.addEventListener("click", (event) => {
         break;
       }
     }
-    addBookToScreen();
   }
+  addBookToScreen();
 
   if (event.target.classList.contains("toggle-read")) {
     const bookId = event.target.dataset.id;
